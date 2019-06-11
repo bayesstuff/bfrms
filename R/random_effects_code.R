@@ -14,16 +14,15 @@ random_effects_code <- function(formula, data) {
     tmp_prior <- vector("character", re_length[i])
     tmp_scale <- vector("character", re_length[i])
     for (j in seq_len(re_length[i])) {
-      tmp_prior[j] <- str_replace_all(prior_template,
-                                      "SDi", paste0("sd_", i, "[", j, "]"))
+      tmp_prior[j] <- gsub("SDi", paste0("sd_", i, "[", j, "]"), prior_template)
       tmp_scale[j] <- paste0("  r_", i, "_", j, " = ",  "r_", i, "_", j, " * sqrt(sigmaSQ);")
     }
     out_prior[[i]] <- tmp_prior
     out_scale[[i]] <- tmp_scale
   }
   return(list(
-    prior = unlist(out_prior),
-    scale = unlist(out_scale)
+    prior = paste(unlist(out_prior), collapse = "\n"),
+    scale = paste(unlist(out_scale), collapse = "\n")
   ))
 }
 

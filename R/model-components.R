@@ -11,8 +11,8 @@ var_likelihood0 <- stanvar(scode = "
 ", block = 'functions')
 
 var_model <- "
-target += normal_lpdf(b | 0, sqrt(sigmaSQ * g));
-target += inv_gamma_lpdf(g | 0.5, 0.5 * r_fixed^2);
+  target += normal_lpdf(b | 0, sqrt(sigmaSQ * g));
+  target += inv_gamma_lpdf(g | 0.5, 0.5 * r_fixed^2);
 "
 
 jzs_normal <- custom_family("jzs_normal",

@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 development.R
 development_files
+^README\.Rmd$

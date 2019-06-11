@@ -52,9 +52,9 @@ bfrm <- function(formula, data,
   } else stop("formula needs to be a formula.", call. = FALSE)
 
   var_data <-
-    stanvar(scode = paste0("real r_fixed =", prior_arg$r_fixed,";"),
+    stanvar(scode = paste0("real r_fixed = ", prior_arg$r_fixed,";"),
             block = "tdata") +
-    stanvar(scode = paste0("real r_random =", prior_arg$r_random,";"),
+    stanvar(scode = paste0("real r_random = ", prior_arg$r_random,";"),
             block = "tdata")
 
 
@@ -63,9 +63,18 @@ bfrm <- function(formula, data,
   stanvars <- var_llk +
     stanvar(scode = paste(code_model_extra, re_code$prior, collapse = "\n"),
             block = "model") +
-    stanvar(scode = paste(re_code$scale, collapse = "\n"),
+    stanvar(scode = re_code$scale,
             block = "tparameters") +
     var_data
+  # browser()
+  # do.call(what = "make_stancode",
+  #         args = c(
+  #           formula = list(bf_formula),
+  #           data = list(data),
+  #           family = list(brm_family),
+  #           stanvars = list(stanvars),
+  #           prior = list(var_prior)))
+
   do.call(what = "brm",
           args = c(
             formula = list(bf_formula),
