@@ -1,0 +1,28 @@
+---
+title: "Compare Against BayesFactor with 1-RE Term"
+output: html_notebook
+---
+
+# Prepare Data
+
+```{r, message=FALSE}
+data("fhch2010", package = "afex")
+
+library("tidyverse")
+
+fhch <- as_tibble(fhch2010) %>% 
+  filter(correct)
+
+fhch2 <- fhch %>% 
+  group_by(id, stimulus) %>% 
+  nest() %>% 
+  mutate(samp = map(data, ~.[1:5,])) %>% 
+  select(id, stimulus, samp) %>% 
+  unnest()
+
+```
+
+```{r}
+
+```
+
