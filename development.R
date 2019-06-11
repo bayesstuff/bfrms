@@ -6,6 +6,7 @@ usethis::use_test("contr.bayes")
 library("testthat")
 
 usethis::use_readme_rmd()
+usethis::use_travis()
 
 usethis::use_package("lme4")
 usethis::use_package("brms", type = "Depends")
