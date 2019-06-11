@@ -1,14 +1,20 @@
 Package: bfrms
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+Title: Bayes Factors for Bayesian Regression Models using 'Stan'
+Version: 0.1-0
+Authors@R: c(
+             person(given="Henrik", family="Singmann", role=c("aut", "cre"),
+             comment=c(ORCID="0000-0002-4842-3657")),
+             person(given="Quentin F.", family="Gronau", role="aut",
+             email="Quentin.F.Gronau@gmail.com",
+             comment=c(ORCID="0000-0001-5510-6943")),
+             person(given="Eric-Jan", family="Wagenmakers", role="ctb"))
+Description: Allows estimation of (Gaussian) brms 
+    <https://cran.r-project.org/package=brms> models using the JZS 
+    (Jeffreys-Zellner-Siow) prior following Rouder, Morey, Speckman, and 
+    Province (2012, <doi:10.1016/j.jmp.2012.08.001>). With these models it is 
+    easy to obtain Bayes factors using the bridgesampling 
+    <https://cran.r-project.org/package=bridgesampling> package. 
+License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
