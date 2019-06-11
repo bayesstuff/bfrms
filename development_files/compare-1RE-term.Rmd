@@ -21,7 +21,8 @@ fhch2 <- fhch %>%
   unnest()
 ```
 
-# Compute Bayes Factor with bfrms
+# Example 1
+## Compute Bayes Factor with bfrms
 ```{r, message=FALSE, results='hide'}
 library("bfrms")
 options(contrasts = c("contr.bayes", "contr.poly"))
@@ -39,7 +40,7 @@ fit0 <- bfrm(rt ~ 1 + (1|id),
 bayes_factor(fit1, fit0, silent = TRUE)
 ```
 
-# Compare to BayesFactor
+## Compare to BayesFactor
 ```{r, message=FALSE}
 library("BayesFactor")
 mod1 <- lmBF(rt ~  task + id, fhch2, whichRandom = "id", 
@@ -49,3 +50,30 @@ mod0 <- lmBF(rt ~  1 + id, fhch2, whichRandom = "id",
 mod1 / mod0
 ```
 
+# Example 2
+## Compute Bayes Factor with bfrms
+```{r, message=FALSE, results='hide'}
+fit2 <- bfrm(rt ~ stimulus + (stimulus||id), 
+             fhch2, 
+             iter = 25000, warmup = 1000,
+             cores = 4)
+fit02 <- bfrm(rt ~ 1 + (stimulus||id), 
+              fhch2, 
+              iter = 25000, warmup = 1000,
+              cores = 4)
+```
+
+```{r}
+bayes_factor(fit2, fit02, silent = TRUE)
+```
+
+## Compare to BayesFactor
+```{r, message=FALSE}
+mod2 <- lmBF(rt ~  stimulus + id + stimulus:id, fhch2,
+             whichRandom = c("id", "stimulus:id"), 
+             rscaleFixed = 0.5, rscaleRandom = 0.5)
+mod02 <- lmBF(rt ~  1 + id + stimulus:id, fhch2,
+              whichRandom = c("id", "stimulus:id"),
+              rscaleFixed = 0.5, rscaleRandom = 0.5)
+mod2 / mod02
+```
