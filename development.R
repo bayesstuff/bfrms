@@ -5,6 +5,9 @@ devtools::document()
 usethis::use_test("contr.bayes")
 library("testthat")
 
+usethis::use_package("lme4")
+usethis::use_package("brms", type = "Depends")
+
 #usethis::use_testthat()
 #usethis::use_roxygen_md()
 #usethis::create_package("../bfrms")

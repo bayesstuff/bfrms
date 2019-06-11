@@ -1,11 +1,10 @@
 Package: bfrms
 Title: Bayes Factors for Bayesian Regression Models using 'Stan'
 Version: 0.1-0
-Authors@R: c(
-             person(given="Henrik", family="Singmann", role=c("aut", "cre"),
+Authors@R: c(person(given="Henrik", family="Singmann", role=c("aut", "cre"),
+             email="singmann@gmail.com",
              comment=c(ORCID="0000-0002-4842-3657")),
              person(given="Quentin F.", family="Gronau", role="aut",
-             email="Quentin.F.Gronau@gmail.com",
              comment=c(ORCID="0000-0001-5510-6943")),
              person(given="Eric-Jan", family="Wagenmakers", role="ctb"))
 Description: Allows estimation of (Gaussian) brms 
@@ -21,3 +20,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 Suggests: 
     testthat (>= 2.1.0)
+Depends: 
+    brms
+Imports: 
+    lme4
