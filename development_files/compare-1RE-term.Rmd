@@ -121,3 +121,35 @@ mod03_2 <- lmBF(rt ~ task + id + stimulus:id, fhch2,
 mod3 / mod03_1
 mod3 / mod03_2
 ```
+
+# Example 4
+## Compute Bayes Factor with bfrms
+```{r, message=FALSE, results='hide'}
+fit4 <- bfrm(rt ~ task*stimulus + (stimulus||id), 
+             fhch2, 
+             iter = 25000, warmup = 1000,
+             cores = 4,
+             prior_arg = list(r_fixed = 0.5, r_random = 1))
+fit04 <- bfrm(rt ~ task + stimulus + (stimulus||id), 
+              fhch2, 
+              iter = 25000, warmup = 1000,
+              cores = 4,
+              prior_arg = list(r_fixed = 0.5, r_random = 1))
+```
+
+```{r}
+bayes_factor(fit4, fit04, silent = TRUE)
+```
+
+## Compare to BayesFactor
+```{r, message=FALSE}
+mod4 <- lmBF(rt ~ task + stimulus + task:stimulus +
+               id + stimulus:id, fhch2,
+             whichRandom = c("id", "stimulus:id"), 
+             rscaleFixed = 0.5, rscaleRandom = 1)
+mod04 <- lmBF(rt ~ task + stimulus +
+                id + stimulus:id, fhch2,
+              whichRandom = c("id", "stimulus:id"), 
+              rscaleFixed = 0.5, rscaleRandom = 1)
+mod4 / mod04
+```
