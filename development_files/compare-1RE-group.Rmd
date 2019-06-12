@@ -1,14 +1,16 @@
 ---
-title: "Compare Against BayesFactor with 1-RE Grouping Factor"
+title: "Compare bfrms Against BayesFactor with 1-RE Grouping Factor"
 output: html_document
 ---
 
-# Prepare Data
+# Prepare Data and Load Packages
 
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 data("fhch2010", package = "afex")
 
 library("tidyverse")
+library("bfrms")
+library("BayesFactor")
 
 fhch <- as_tibble(fhch2010) %>% 
   filter(correct)
@@ -21,10 +23,12 @@ fhch2 <- fhch %>%
   unnest()
 ```
 
-# Example 1
+# Example 1: Single Fixed Effect w/o Random-Slope
+
+Task (lexical-decision versus naming) is a between-subjects factor so we only estimate by-participant random intercepts.
+
 ## Compute Bayes Factor with bfrms
 ```{r, message=FALSE, results='hide'}
-library("bfrms")
 fit1 <- bfrm(rt ~ task + (1|id), 
              fhch2, 
              iter = 25000, warmup = 1000,
@@ -42,8 +46,7 @@ bayes_factor(fit1, fit01, silent = TRUE)
 ```
 
 ## Compare to BayesFactor
-```{r, message=FALSE}
-library("BayesFactor")
+```{r, message=FALSE, warning=FALSE}
 mod1 <- lmBF(rt ~ task + id, fhch2, whichRandom = "id", 
              rscaleFixed = 0.5, rscaleRandom = 1)
 mod01 <- lmBF(rt ~ 1 + id, fhch2, whichRandom = "id", 
@@ -51,7 +54,10 @@ mod01 <- lmBF(rt ~ 1 + id, fhch2, whichRandom = "id",
 mod1 / mod01
 ```
 
-# Example 2
+# Example 2: Single Fixed Effect with Random Slopes
+
+Stimulus (word versus nonword) is a within-subjects factor so we estimate by-participant random intercepts plus by-participants random slopes for stimulus which allow every `id` to have their own idiosyncratic effect of stimulus.
+
 ## Compute Bayes Factor with bfrms
 ```{r, message=FALSE, results='hide'}
 fit2 <- bfrm(rt ~ stimulus + (stimulus||id), 
@@ -71,7 +77,7 @@ bayes_factor(fit2, fit02, silent = TRUE)
 ```
 
 ## Compare to BayesFactor
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 mod2 <- lmBF(rt ~ stimulus + id + stimulus:id, fhch2,
              whichRandom = c("id", "stimulus:id"), 
              rscaleFixed = 0.5, rscaleRandom = 1)
@@ -81,7 +87,10 @@ mod02 <- lmBF(rt ~ 1 + id + stimulus:id, fhch2,
 mod2 / mod02
 ```
 
-# Example 3
+# Example 3: Two Fixed Effects (Main Effect, but not Interaction)
+
+We again have by-participant random intercept plus random slope for stimulus.
+
 ## Compute Bayes Factor with bfrms
 ```{r, message=FALSE, results='hide'}
 fit3 <- bfrm(rt ~ task + stimulus + (stimulus||id), 
@@ -107,7 +116,7 @@ bayes_factor(fit3, fit03_2, silent = TRUE)
 ```
 
 ## Compare to BayesFactor
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 mod3 <- lmBF(rt ~ task +
                stimulus + id + stimulus:id, fhch2,
              whichRandom = c("id", "stimulus:id"), 
@@ -122,7 +131,7 @@ mod3 / mod03_1
 mod3 / mod03_2
 ```
 
-# Example 4
+# Example 4: Three Fixed Effects (Main Effects plus Interaction)
 ## Compute Bayes Factor with bfrms
 ```{r, message=FALSE, results='hide'}
 fit4 <- bfrm(rt ~ task*stimulus + (stimulus||id), 
@@ -142,7 +151,7 @@ bayes_factor(fit4, fit04, silent = TRUE)
 ```
 
 ## Compare to BayesFactor
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 mod4 <- lmBF(rt ~ task + stimulus + task:stimulus +
                id + stimulus:id, fhch2,
              whichRandom = c("id", "stimulus:id"), 
