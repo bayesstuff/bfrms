@@ -47,11 +47,14 @@ test_that("Machine Data Reproduces BayesFactor results even with change in prior
   bf1 <- bridgesampling::bayes_factor(fit1, fit0, silent = TRUE)
   library("BayesFactor")
   mod1 <- lmBF(score ~  Machine + Worker + Machine:Worker, Machines,
-               whichRandom = "Worker", rscaleRandom = r_random)
+               whichRandom = "Worker", rscaleRandom = r_random,
+               iterations = 200000)
 
   mod0 <- lmBF(score ~  1 + Worker + Machine:Worker, Machines,
-               whichRandom = "Worker", rscaleRandom = r_random)
+               whichRandom = "Worker", rscaleRandom = r_random,
+               iterations = 200000)
   bf2 <- mod1 / mod0
+  # extractBF(bf2, onlybf = TRUE)
 
   testthat::expect_equivalent(bf1$bf, extractBF(bf2, onlybf = TRUE),
                               tolerance = bf1$bf * 0.1, scale = 1)
