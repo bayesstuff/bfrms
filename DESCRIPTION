@@ -20,7 +20,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 Suggests: 
     testthat (>= 2.1.0),
-    MEMSS
+    MEMSS,
+    BayesFactor,
+    bridgesampling
 Depends: 
     brms
 Imports: 
