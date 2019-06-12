@@ -24,4 +24,5 @@ Suggests:
 Depends: 
     brms
 Imports: 
-    lme4
+    lme4,
+    stats

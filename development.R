@@ -9,6 +9,7 @@ usethis::use_readme_rmd()
 usethis::use_travis()
 
 usethis::use_package("lme4")
+usethis::use_package("stats")
 usethis::use_package("brms", type = "Depends")
 
 usethis::use_package("MEMSS", type = "Suggests") ## for example data
