@@ -29,6 +29,9 @@ check_prior_arg <- function(prior_structure,
   out_prior_arg
 }
 
+#' @importFrom stats model.matrix as.formula contrasts<- gaussian terms
+#' @importFrom stats update.formula
+#' @importFrom brms is.brmsformula brmsformula prior_string stanvar
 prep_brm <- function(formula, data,
                      family,
                      prior_structure, prior_arg) {

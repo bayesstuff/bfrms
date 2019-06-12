@@ -11,9 +11,6 @@
 #' @param ... Further arguments passed to [brms::brm()] such as `iter`,
 #'   `warmup`, or `cores`.
 #'
-#' @importFrom stats model.matrix as.formula contrasts<- gaussian
-#' @importFrom brms is.brmsformula brmsformula prior_string stanvar
-#'
 #' @export
 bfrm <- function(formula, data,
                  family = gaussian(),
