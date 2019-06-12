@@ -34,7 +34,7 @@ test_that("Machine Data Reproduces BayesFactor results even with change in prior
   testthat::skip_if_not_installed("bridgesampling")
   data(Machines, package = "MEMSS")
   Machines <- droplevels(Machines[Machines$Machine %in% c("A", "C"),])
-  r_random <- 0.2
+  r_random <- 2
 
   fit1 <- bfrm(score ~ Machine + (Machine||Worker),
                Machines,
