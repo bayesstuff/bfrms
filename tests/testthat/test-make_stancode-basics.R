@@ -1,4 +1,4 @@
-context("Produces coorect code for different inputs")
+context("Produces correct code for different inputs")
 
 test_that("formulas with explicit or missing intercept are handled correctly", {
   testthat::skip_if_not_installed("MEMSS")
@@ -17,3 +17,6 @@ test_that("formulas with explicit or missing intercept are handled correctly", {
   )
 
 })
+
+
+

@@ -13,6 +13,9 @@ fhch2 <- fhch %>%
   select(id, stimulus, samp) %>%
   unnest()
 
+fhchr <- as.data.frame(fhch2)
+save(fhchr, file = "tests/testthat/fhchr.rda")
+
 ####
 fit1 <- bfrm(rt ~ task + (1|id),
              fhch2,
