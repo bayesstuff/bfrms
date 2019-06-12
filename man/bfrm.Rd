@@ -5,7 +5,7 @@
 \title{Fit Bayesian Linear Mixed Model with JZS Prior}
 \usage{
 bfrm(formula, data, family = gaussian(), prior_structure = "jzs",
-  prior_arg = list(r_fixed = 0.5, r_random = 0.5), ...)
+  prior_arg = list(r_fixed = 0.5, r_random = 1), ...)
 }
 \arguments{
 \item{formula}{An object of class \code{\link{formula}}.}
