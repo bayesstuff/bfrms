@@ -49,11 +49,20 @@ prep_brm <- function(formula, data,
       intercept_only <- FALSE
       brm_family <- jzs_normal
       var_llk <- var_likelihood
-      code_model_extra <- var_model
       bf_formula <- brmsformula(update.formula(formula, ~ 0 + .), cmc = FALSE)
       var_prior <- prior_string("", class = "sigmaSQ") +
         prior_string("", class = "sd") +
         prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ", check = FALSE)
+      var_data <-
+        stanvar(scode = paste0("real r_fixed = ", prior_arg$r_fixed,";"),
+                block = "tdata") +
+        stanvar(scode = paste0("real r_random = ", prior_arg$r_random,";"),
+                block = "tdata") +
+        stanvar(scode = paste0("int TRMS = ", max(attr(mm, "assign")),";"),
+                block = "tdata") +
+        stanvar(x = attr(mm, "assign")[-1], name = "b_MAP")
+      code_model_extra <- if (length(attr(mm, "assign")[-1]) > 1)
+        var_model_m else var_model_1
     } else {
       intercept_only <- TRUE
       brm_family <- jzs0_normal
@@ -64,16 +73,13 @@ prep_brm <- function(formula, data,
         prior_string("", class = "sd") +
         prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ", check = FALSE) +
         prior_string("", class = "Intercept")
+      var_data <- NULL
     }
   } else stop("formula needs to be a formula.", call. = FALSE)
 
   data <- check_coding(formula, data)
 
-  var_data <-
-    stanvar(scode = paste0("real r_fixed = ", prior_arg$r_fixed,";"),
-            block = "tdata") +
-    stanvar(scode = paste0("real r_random = ", prior_arg$r_random,";"),
-            block = "tdata")
+
 
 
   re_code <- random_effects_code(bf_formula, data)

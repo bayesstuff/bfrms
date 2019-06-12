@@ -9,13 +9,20 @@ var_likelihood0 <- stanvar(scode = "
   }
 ", block = 'functions')
 
-var_model <- "
-  target += normal_lpdf(b | 0, sqrt(sigmaSQ * g));
+var_model_1 <- "
+  target += normal_lpdf(b | 0, sqrt(sigmaSQ * g[1]));
+  target += inv_gamma_lpdf(g | 0.5, 0.5 * r_fixed^2);
+"
+
+var_model_m <- "
+  for (k in 1:K) {
+    target += normal_lpdf(b[k] | 0, sqrt(sigmaSQ * g[b_MAP[k]]));
+  }
   target += inv_gamma_lpdf(g | 0.5, 0.5 * r_fixed^2);
 "
 
 jzs_normal <- custom_family("jzs_normal",
-                            dpars = c("mu", "sigmaSQ", "interc", "g"),
+                            dpars = c("mu", "sigmaSQ", "interc", "g[TRMS]"),
                             type = "real",
                             lb = c(NA, 0, NA, 0))
 jzs0_normal <- custom_family("jzs0_normal",
