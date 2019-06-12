@@ -41,6 +41,9 @@ prep_brm <- function(formula, data,
   } else if (inherits(formula, "formula")) {
     formula <- update.formula(formula, ~.)
     formula_fixed <- lme4::nobars(formula)
+    if (attr(terms(formula_fixed, data = data), "intercept") == 0) {
+      stop("formula needs to have an intercept (i.e., no 0/-1)", call. = FALSE)
+    }
     mm <- model.matrix(formula_fixed, data = data)
     if (ncol(mm) > 1) {
       intercept_only <- FALSE
