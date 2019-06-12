@@ -4,3 +4,4 @@ development.R
 development_files
 ^README\.Rmd$
 ^\.travis\.yml$
+examples
