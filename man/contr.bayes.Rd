@@ -9,7 +9,7 @@ contr.bayes(n, contrasts = TRUE)
 \arguments{
 \item{n}{a vector of levels for a factor, or the number of levels.}
 
-\item{logical}{indicating whether contrasts should be computed.}
+\item{contrasts}{logical indicating whether contrasts should be computed.}
 }
 \value{
 A \code{matrix} with n rows and k columns, with k=n-1 if contrasts is

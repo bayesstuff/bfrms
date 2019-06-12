@@ -2,3 +2,12 @@
 
 export(bfrm)
 export(contr.bayes)
+importFrom(brms,brmsformula)
+importFrom(brms,is.brmsformula)
+importFrom(brms,make_standata)
+importFrom(brms,prior_string)
+importFrom(brms,stanvar)
+importFrom(stats,"contrasts<-")
+importFrom(stats,as.formula)
+importFrom(stats,gaussian)
+importFrom(stats,model.matrix)

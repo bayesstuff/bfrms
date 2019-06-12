@@ -1,3 +1,4 @@
+#' @importFrom brms make_standata
 random_effects_code <- function(formula, data) {
   tmpdat <- make_standata(formula, data,
                           family = jzs_normal)

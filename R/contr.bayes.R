@@ -5,7 +5,7 @@
 #' description in Rouder, Morey, Speckman, & Province (2012, p. 363).
 #'
 #' @param n a vector of levels for a factor, or the number of levels.
-#' @param logical indicating whether contrasts should be computed.
+#' @param contrasts logical indicating whether contrasts should be computed.
 #'
 #' @references Rouder, J. N., Morey, R. D., Speckman, P. L., & Province, J. M.
 #'   (2012). Default Bayes factors for ANOVA designs. *Journal of Mathematical
