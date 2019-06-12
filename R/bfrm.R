@@ -24,72 +24,55 @@ bfrm <- function(formula, data,
   if ("save_all_pars" %in% names(dots)) {
     dots[["save_all_pars"]] <- NULL
   }
-  prior_arg <- check_prior_arg(prior_structure = prior_structure,
-                           prior_arg = prior_arg)
-  if (is.brmsformula(formula)) {
-    stop("bfrm currently only supports non-brms formulas.", call. = FALSE)
-  } else if (inherits(formula, "formula")) {
-    formula_fixed <- lme4::nobars(formula)
-    mm <- model.matrix(formula_fixed, data = data)
-    if (ncol(mm) > 1) {
-      intercept_only <- FALSE
-      brm_family <- jzs_normal
-      var_llk <- var_likelihood
-      code_model_extra <- var_model
-      bf_formula <- brmsformula(as.formula(paste(
-        deparse(formula[[2]], width.cutoff = 500L),
-        "~ 0 +",
-        deparse(formula[[3]], width.cutoff = 500L))), cmc = FALSE)
-      var_prior <- prior_string("", class = "sigmaSQ") +
-        prior_string("", class = "sd") +
-        prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ", check = FALSE)
-    } else {
-      intercept_only <- TRUE
-      brm_family <- jzs0_normal
-      var_llk <- var_likelihood0
-      code_model_extra <- NULL
-      bf_formula <- brmsformula(formula, cmc = FALSE)
-      var_prior <- prior_string("", class = "sigmaSQ") +
-        prior_string("", class = "sd") +
-        prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ", check = FALSE) +
-        prior_string("", class = "Intercept")
-    }
-  } else stop("formula needs to be a formula.", call. = FALSE)
-
-  data <- check_coding(formula, data)
-
-  var_data <-
-    stanvar(scode = paste0("real r_fixed = ", prior_arg$r_fixed,";"),
-            block = "tdata") +
-    stanvar(scode = paste0("real r_random = ", prior_arg$r_random,";"),
-            block = "tdata")
-
-
-  re_code <- random_effects_code(bf_formula, data)
-
-  stanvars <- var_llk +
-    stanvar(scode = paste(code_model_extra, re_code$prior, collapse = "\n"),
-            block = "model") +
-    stanvar(scode = re_code$scale,
-            block = "tparameters") +
-    var_data
-  # browser()
-  # do.call(what = "make_stancode",
-  #         args = c(
-  #           formula = list(bf_formula),
-  #           data = list(data),
-  #           family = list(brm_family),
-  #           stanvars = list(stanvars),
-  #           prior = list(var_prior)))
-
-  do.call(what = "brm",
+  brm_args <- prep_brm(formula = formula,
+                       data = data,
+                       family = family,
+                       prior_structure = prior_structure,
+                       prior_arg = prior_arg)
+    do.call(what = "brm",
           args = c(
-            formula = list(bf_formula),
-            data = list(data),
-            family = list(brm_family),
-            stanvars = list(stanvars),
-            prior = list(var_prior),
+            brm_args,
             dots,
             save_all_pars = TRUE
+          ))
+
+}
+
+
+#' @export
+make_stancode_bfrms <- function(formula, data,
+                                family = gaussian(),
+                                prior_structure = "jzs",
+                                prior_arg = list(r_fixed = 0.5, r_random = 1),
+                                ...) {
+  dots <- list(...)
+  brm_args <- prep_brm(formula = formula,
+                       data = data,
+                       family = family,
+                       prior_structure = prior_structure,
+                       prior_arg = prior_arg)
+    do.call(what = "make_stancode",
+          args = c(
+            brm_args,
+            dots
+          ))
+}
+
+#' @export
+make_standata_bfrms <- function(formula, data,
+                                family = gaussian(),
+                                prior_structure = "jzs",
+                                prior_arg = list(r_fixed = 0.5, r_random = 1),
+                                ...) {
+  dots <- list(...)
+  brm_args <- prep_brm(formula = formula,
+                       data = data,
+                       family = family,
+                       prior_structure = prior_structure,
+                       prior_arg = prior_arg)
+    do.call(what = "make_standata",
+          args = c(
+            brm_args,
+            dots
           ))
 }

@@ -1,9 +1,12 @@
 
 devtools::load_all()
 devtools::document()
+devtools::test()
 
 usethis::use_test("Machines")
 library("testthat")
+
+usethis::use_test("make_stancode-basics")
 
 usethis::use_readme_rmd()
 usethis::use_travis()
