@@ -45,6 +45,9 @@ prep_brm <- function(formula, data,
       stop("formula needs to have an intercept (i.e., no 0/-1)", call. = FALSE)
     }
     mm <- model.matrix(formula_fixed, data = data)
+    var_data <-
+        stanvar(x = prior_arg$r_fixed, name = "r_fixed") +
+        stanvar(x = prior_arg$r_random, name = "r_random")
     if (ncol(mm) > 1) {
       intercept_only <- FALSE
       brm_family <- jzs_normal
@@ -53,9 +56,7 @@ prep_brm <- function(formula, data,
       var_prior <- prior_string("", class = "sigmaSQ") +
         prior_string("", class = "sd") +
         prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ", check = FALSE)
-      var_data <-
-        stanvar(x = prior_arg$r_fixed, name = "r_fixed") +
-        stanvar(x = prior_arg$r_random, name = "r_random") +
+      var_data <- var_data +
         stanvar(x = max(attr(mm, "assign")), name = "TRMS") +
         stanvar(x = attr(mm, "assign")[-1], name = "b_MAP")
       code_model_extra <- if (length(attr(mm, "assign")[-1]) > 1)
@@ -70,7 +71,6 @@ prep_brm <- function(formula, data,
         prior_string("", class = "sd") +
         prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ", check = FALSE) +
         prior_string("", class = "Intercept")
-      var_data <- NULL
     }
   } else stop("formula needs to be a formula.", call. = FALSE)
 
