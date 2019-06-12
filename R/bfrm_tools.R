@@ -54,12 +54,9 @@ prep_brm <- function(formula, data,
         prior_string("", class = "sd") +
         prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ", check = FALSE)
       var_data <-
-        stanvar(scode = paste0("real r_fixed = ", prior_arg$r_fixed,";"),
-                block = "tdata") +
-        stanvar(scode = paste0("real r_random = ", prior_arg$r_random,";"),
-                block = "tdata") +
-        stanvar(scode = paste0("int TRMS = ", max(attr(mm, "assign")),";"),
-                block = "tdata") +
+        stanvar(x = prior_arg$r_fixed, name = "r_fixed") +
+        stanvar(x = prior_arg$r_random, name = "r_random") +
+        stanvar(x = max(attr(mm, "assign")), name = "TRMS") +
         stanvar(x = attr(mm, "assign")[-1], name = "b_MAP")
       code_model_extra <- if (length(attr(mm, "assign")[-1]) > 1)
         var_model_m else var_model_1
