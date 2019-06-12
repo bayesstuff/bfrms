@@ -65,16 +65,14 @@ These results replicate the results from the `BayesFactor` package as shown belo
 ```{r, message=FALSE, results='hide'}
 library("BayesFactor")
 mod1 <- lmBF(score ~  Machine + Worker + Machine:Worker, Machines, 
-             whichRandom = "Worker", 
-             rscaleFixed = 0.5, rscaleRandom = 0.5)
+             whichRandom = "Worker")
 
 mod0 <- lmBF(score ~  1 + Worker + Machine:Worker, Machines, 
-             whichRandom = "Worker", 
-             rscaleFixed = 0.5, rscaleRandom = 0.5)
+             whichRandom = "Worker")
 ```
 
 
 ```{r}
-mod1/mod0
+mod1 / mod0
 ```
 

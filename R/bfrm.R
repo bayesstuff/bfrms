@@ -18,12 +18,14 @@
 bfrm <- function(formula, data,
                  family = gaussian(),
                  prior_structure = "jzs", prior_arg = list(r_fixed = 0.5,
-                                                           r_random = 0.5),
+                                                           r_random = 1),
                  ...) {
   dots <- list(...)
   if ("save_all_pars" %in% names(dots)) {
     dots[["save_all_pars"]] <- NULL
   }
+  prior_arg <- check_prior_arg(prior_structure = prior_structure,
+                           prior_arg = prior_arg)
   if (is.brmsformula(formula)) {
     stop("bfrm currently only supports non-brms formulas.", call. = FALSE)
   } else if (inherits(formula, "formula")) {

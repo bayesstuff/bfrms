@@ -16,3 +16,15 @@ check_coding <- function(formula, data) {
   }
   data
 }
+
+check_prior_arg <- function(prior_structure,
+                        prior_arg) {
+  prior_structure <- match.arg(tolower(prior_structure), "jzs")
+  if (prior_structure == "jzs") {
+    ## replace default values with passed values
+    default_prior_arg <- eval(formals(bfrm)$prior_arg)
+    out_prior_arg <- default_prior_arg
+    out_prior_arg[names(prior_arg)] <- prior_arg
+  }
+  out_prior_arg
+}
