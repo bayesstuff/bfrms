@@ -88,7 +88,8 @@ prep_brm <- function(formula, data,
     stanvar(scode = paste(code_model_extra, re_code$prior, collapse = "\n"),
             block = "model") +
     stanvar(scode = re_code$scale,
-            block = "tparameters") +
+            block = "tparameters",
+            position = "end") +
     var_data
 
   c(

@@ -24,7 +24,7 @@ Suggests:
     BayesFactor,
     bridgesampling
 Depends: 
-    brms
+    brms (>= 2.12.11)
 Imports: 
     lme4,
     stats

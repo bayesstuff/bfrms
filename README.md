@@ -70,7 +70,7 @@ library("bridgesampling")
 
 ``` r
 bayes_factor(fit1, fit0, silent = TRUE)
-#> Estimated Bayes factor in favor of bridge1 over bridge2: 100.10839
+#> Estimated Bayes factor in favor of fit1 over fit0: 96.85747
 ```
 
 These results replicate the results from the `BayesFactor` package as
@@ -90,7 +90,7 @@ mod0 <- lmBF(score ~  1 + Worker + Machine:Worker, Machines,
 mod1 / mod0
 #> Bayes factor analysis
 #> --------------
-#> [1] Machine + Worker + Machine:Worker : 97.08642 ±0.67%
+#> [1] Machine + Worker + Machine:Worker : 100.142 ±3.1%
 #> 
 #> Against denominator:
 #>   score ~ 1 + Worker + Machine:Worker 
