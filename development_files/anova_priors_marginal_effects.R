@@ -39,6 +39,7 @@ rand_b_anova <- function(levels, n, hfixed = 1) {
 transform_b_to_levels <- function(bmat) {
   nlevels <- ncol(bmat) + 1
   mmat <- contr.bayes(nlevels)
+  #mmat <- mmat / max(mmat)
   mat_out <- matrix(NA_real_, nrow = nrow(bmat), ncol = nlevels)
   for (i in seq_len(nlevels)) {
     mat_out[,i] <- bmat %*% t(mmat[i, , drop = FALSE])
