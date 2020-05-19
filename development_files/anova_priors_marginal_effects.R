@@ -61,9 +61,18 @@ ef_6levels <- transform_b_to_levels(rand_b_anova(6, NSAMPLES)) %>%
    pivot_longer(cols = -levels)
 
 xlim <- c(-10, 10) ## to focus on area where it matters
+ref <- tibble(
+  value = seq(xlim[1], xlim[2], length.out = 201)
+) %>%
+  mutate(cauchy_07 = dcauchy(value, 0, scale = sqrt(2)/2),
+         cauchy_1 = dcauchy(value, 0, scale = 1)) %>%
+  pivot_longer(cols = -value, names_to = "cauchy", values_to = "density")
+
 bind_rows(ef_2levels, ef_3levels, ef_6levels) %>%
   ggplot(aes(value)) +
-  geom_density() +
+  geom_density(size = 1) +
+  geom_line(data = ref, aes(x = value, y = density, linetype = cauchy),
+            color = "red") +
   facet_grid(rows = vars(name), cols = vars(levels)) +
   xlim(xlim)
 ggsave("prior_pred.pdf", width = 10, height = 12)
