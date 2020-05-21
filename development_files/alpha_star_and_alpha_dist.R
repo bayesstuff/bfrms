@@ -171,3 +171,30 @@ alpha2 %>%
   facet_grid(rows = vars(name), cols = vars(levels)) +
   xlim(xlim)
 
+
+##################################################################
+##                  5 Levels and Prior Scaling                  ##
+##################################################################
+
+#### check case of 5 levels:
+alpha_star_mvc_5l <- gen_alphas_mvc(5, n = NSAMPLES)
+alpha_star_mvc_5l_l <- transform_par_long(alpha_star_mvc_5l) %>%
+  mutate(scale = "alpha* (n - 1)") %>%
+  mutate(name = str_replace(name, "P", "L"))
+alpha_mvc_5l_l <- transform_alphas_and_make_long(alpha_star_mvc_5l) %>%
+  mutate(scale = "alpha (n)")
+
+ref <- tibble(
+  value = seq(xlim[1], xlim[2], length.out = 201)
+) %>%
+  mutate(cauchy_0_9 = dcauchy(value, 0, scale = max(contr.bayes(5))),
+         cauchy_1_0 = dcauchy(value, 0, scale = 1)) %>%
+  pivot_longer(cols = -value, names_to = "cauchy", values_to = "density")
+
+bind_rows(alpha_star_mvc_5l_l, alpha_mvc_5l_l) %>%
+  ggplot(aes(value)) +
+  geom_density(size = 1, color = "red") +
+  geom_line(data = ref, aes(x = value, y = density, linetype = cauchy),
+            color = "black") +
+  facet_grid(rows = vars(name), cols = vars(scale)) +
+  xlim(xlim)
