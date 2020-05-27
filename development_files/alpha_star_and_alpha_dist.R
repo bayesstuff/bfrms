@@ -6,7 +6,7 @@ theme_set(theme_bw(base_size = 15) +
                   panel.grid.major.x = element_blank()))
 
 NSAMPLES <- 1e5
-FAC_LEVELS <- c(2, 3, 6)
+FAC_LEVELS <- c(2, 3, 4, 5, 6)
 xlim <- c(-10, 10)
 
 
@@ -55,16 +55,17 @@ ref <- tibble(
   pivot_longer(cols = -value, names_to = "cauchy", values_to = "density")
 
 ## function for transforming parameters to longn format for printing
-transform_par_long <- function(mat, alphas = TRUE) {
+transform_par_long <- function(mat, alphas = TRUE,
+                               prefix = if (alphas) "P" else "L",
+                               nlev) {
   if (!is.matrix(mat)) mat <- matrix(mat, ncol = 1)
-  if (alphas) {
+  if (missing(nlev) & alphas) {
     nlev <- ncol(mat) + 1
-    colnames(mat) <- paste0("P_", seq_len(ncol(mat)))
   }
-  else {
+  else if (missing(nlev) & !alphas) {
     nlev <- ncol(mat)
-    colnames(mat) <- paste0("L_", seq_len(ncol(mat)))
   }
+  colnames(mat) <- paste0(prefix, "_", seq_len(ncol(mat)))
   out <- as_tibble(mat)
   out <- mutate(out, levels = paste(nlev, "Levels"))
   pivot_longer(out, -levels)
@@ -111,6 +112,42 @@ alpha_star2 %>%
   facet_grid(rows = vars(name), cols = vars(levels)) +
   xlim(xlim)
 
+## function for transforming parameters to pairs and long
+transform_pairs_long <- function(mat, alphas = TRUE) {
+  if (!is.matrix(mat) | ncol(mat) == 1) {
+    return(transform_par_long(mat, prefix = "D", nlev = 1))
+  } else {
+    k <- ncol(mat)
+    outmat <- matrix(NA_real_, nrow = nrow(mat), ncol = (k*(k-1))/2)
+    c <- 1
+    for (i in seq_len(k)) {
+      for (j in seq_len(k)) {
+        if (i == j) next
+        if (i > j) next
+        #print(c)
+        outmat[,c] <- mat[,i] - mat[,j]
+        c <- c+1
+      }
+    }
+    return(transform_par_long(outmat, prefix = "D", nlev = ncol(mat) + alphas))
+  }
+}
+
+diff_star <- bind_rows(
+  mutate(map_dfr(alpha_star_g, transform_pairs_long), generated = "g"),
+  mutate(map_dfr(alpha_star_mvc, transform_pairs_long), generated = "mvc")
+)
+
+### prior of difference of alpha star
+diff_star %>%
+  ggplot(aes(value)) +
+  geom_density(aes(color = generated), size = 1) +
+  geom_line(data = ref, aes(x = value, y = density, linetype = cauchy),
+            color = "black") +
+  facet_grid(rows = vars(name), cols = vars(levels)) +
+  xlim(xlim)
+
+
 
 ##################################################################
 ##           Step 2: Transform alpha* to alpha with Q           ##
@@ -135,12 +172,12 @@ contr.bayes <- function(n, contrasts = TRUE) {
   cont
 }
 
-transform_alphas_and_make_long <- function(mat) {
+transform_alphas_and_make_long <- function(mat, fin_fun = transform_par_long) {
   if (!is.matrix(mat)) mat <- matrix(mat, ncol = 1)
   nlevels <- ncol(mat) + 1
   mmat <- contr.bayes(nlevels)
   mat_out <- t(mmat %*% t(mat))
-  transform_par_long(mat_out, alphas = FALSE)
+  fin_fun(mat_out, alphas = FALSE)
 }
 
 ## alpha = Q * alpha*
@@ -164,6 +201,27 @@ alpha2 <- bind_rows(
 )
 
 alpha2 %>%
+  ggplot(aes(value)) +
+  geom_density(aes(color = generated), size = 1) +
+  geom_line(data = ref, aes(x = value, y = density, linetype = cauchy),
+            color = "black") +
+  facet_grid(rows = vars(name), cols = vars(levels)) +
+  xlim(xlim)
+
+## prior of differences
+
+alpha_dff <- bind_rows(
+  mutate(map_dfr(alpha_star_g,
+                 ~transform_alphas_and_make_long(., fin_fun = transform_pairs_long)),
+         generated = "g"),
+  mutate(map_dfr(alpha_star_mvc,
+                 ~transform_alphas_and_make_long(., fin_fun = transform_pairs_long)),
+         generated = "mvc")
+)
+
+### prior of difference of alpha star
+alpha_dff %>%
+  filter(as.numeric(substr(name, 3, 4)) < 6) %>%
   ggplot(aes(value)) +
   geom_density(aes(color = generated), size = 1) +
   geom_line(data = ref, aes(x = value, y = density, linetype = cauchy),
