@@ -7,6 +7,7 @@
 
 [![Travis build
 status](https://travis-ci.org/bayesstuff/bfrms.svg?branch=master)](https://travis-ci.org/bayesstuff/bfrms)
+[![DOI](https://zenodo.org/badge/190761217.svg)](https://zenodo.org/badge/latestdoi/190761217)
 <!-- badges: end -->
 
 The goal of bfrms is to …
@@ -70,7 +71,7 @@ library("bridgesampling")
 
 ``` r
 bayes_factor(fit1, fit0, silent = TRUE)
-#> Estimated Bayes factor in favor of fit1 over fit0: 96.85747
+#> Estimated Bayes factor in favor of fit1 over fit0: 99.39783
 ```
 
 These results replicate the results from the `BayesFactor` package as
@@ -90,7 +91,7 @@ mod0 <- lmBF(score ~  1 + Worker + Machine:Worker, Machines,
 mod1 / mod0
 #> Bayes factor analysis
 #> --------------
-#> [1] Machine + Worker + Machine:Worker : 100.142 ±3.1%
+#> [1] Machine + Worker + Machine:Worker : 99.31168 ±1.86%
 #> 
 #> Against denominator:
 #>   score ~ 1 + Worker + Machine:Worker 

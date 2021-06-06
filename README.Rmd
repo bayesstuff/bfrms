@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.org/bayesstuff/bfrms.svg?branch=master)](https://travis-ci.org/bayesstuff/bfrms)
+[![DOI](https://zenodo.org/badge/190761217.svg)](https://zenodo.org/badge/latestdoi/190761217)
 <!-- badges: end -->
 
 The goal of bfrms is to ...
