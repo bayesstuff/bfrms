@@ -1,6 +1,6 @@
 Package: bfrms
 Title: Bayes Factors for Bayesian Regression Models using 'Stan'
-Version: 0.1-0
+Version: 0.1-1
 Authors@R: c(person(given="Henrik", family="Singmann", role=c("aut", "cre"),
              email="singmann@gmail.com",
              comment=c(ORCID="0000-0002-4842-3657")),

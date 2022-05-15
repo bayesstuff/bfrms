@@ -14,8 +14,9 @@
 #' @export
 bfrm <- function(formula, data,
                  family = gaussian(),
-                 prior_structure = "jzs", prior_arg = list(r_fixed = 0.5,
-                                                           r_random = 1),
+                 prior_structure = "jzs",
+                 prior_arg = list(r_fixed = 0.5, r_random = 1),
+                 sigma_scaling = 1,
                  ...) {
   dots <- list(...)
   if ("save_all_pars" %in% names(dots)) {
@@ -25,7 +26,8 @@ bfrm <- function(formula, data,
                        data = data,
                        family = family,
                        prior_structure = prior_structure,
-                       prior_arg = prior_arg)
+                       prior_arg = prior_arg,
+                       sigma_scaling = sigma_scaling)
     do.call(what = "brm",
           args = c(
             brm_args,

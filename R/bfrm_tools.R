@@ -34,7 +34,8 @@ check_prior_arg <- function(prior_structure,
 #' @importFrom brms is.brmsformula brmsformula prior_string stanvar
 prep_brm <- function(formula, data,
                      family,
-                     prior_structure, prior_arg) {
+                     prior_structure, prior_arg,
+                     sigma_scaling) {
 
   prior_arg <- check_prior_arg(prior_structure = prior_structure,
                            prior_arg = prior_arg)
@@ -49,8 +50,9 @@ prep_brm <- function(formula, data,
     }
     mm <- model.matrix(formula_fixed, data = data)
     var_data <-
-        stanvar(x = prior_arg$r_fixed, name = "r_fixed") +
-        stanvar(x = prior_arg$r_random, name = "r_random")
+      stanvar(x = prior_arg$r_fixed, name = "r_fixed") +
+      stanvar(x = prior_arg$r_random, name = "r_random") +
+      stanvar(x = sigma_scaling, name = "sigma_scaling")
     if (ncol(mm) > 1) {
       intercept_only <- FALSE
       brm_family <- jzs_normal
@@ -58,7 +60,8 @@ prep_brm <- function(formula, data,
       bf_formula <- brmsformula(update.formula(formula, ~ 0 + .), cmc = FALSE)
       var_prior <- prior_string("", class = "sigmaSQ") +
         prior_string("", class = "sd") +
-        prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ", check = FALSE)
+        prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ",
+                     check = FALSE)
       var_data <- var_data +
         stanvar(x = max(attr(mm, "assign")), name = "TRMS") +
         stanvar(x = attr(mm, "assign")[-1], name = "b_MAP")
@@ -72,7 +75,8 @@ prep_brm <- function(formula, data,
       bf_formula <- brmsformula(formula, cmc = FALSE)
       var_prior <- prior_string("", class = "sigmaSQ") +
         prior_string("", class = "sd") +
-        prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ", check = FALSE) +
+        prior_string("target +=  -log(sigmaSQ)", class = "sigmaSQ",
+                     check = FALSE) +
         prior_string("", class = "Intercept")
     }
   } else stop("formula needs to be a formula.", call. = FALSE)
