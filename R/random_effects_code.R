@@ -10,13 +10,13 @@ var_likelihood0 <- stanvar(scode = "
 ", block = 'functions')
 
 var_model_1 <- "
-  target += normal_lpdf(b | 0, sqrt(sigmaSQ * g[1]));
+  target += normal_lpdf(b | 0, sqrt(sigmaSQ * g[1]) * sigma_scaling);
   target += inv_gamma_lpdf(g | 0.5, 0.5 * r_fixed^2);
 "
 
 var_model_m <- "
   for (k in 1:K) {
-    target += normal_lpdf(b[k] | 0, sqrt(sigmaSQ * g[b_MAP[k]]));
+    target += normal_lpdf(b[k] | 0, sqrt(sigmaSQ * g[b_MAP[k]]) * sigma_scaling);
   }
   target += inv_gamma_lpdf(g | 0.5, 0.5 * r_fixed^2);
 "
